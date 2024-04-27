@@ -2,7 +2,7 @@
 @section('content')
 <div class="card mt-3">
 <div class"card-header">
-<h5>Proveedores</h5><a href="" class="btn btn-success">Agregar</a>
+<h5>Proveedores</h5><a href="{{route('proveedores.create')}}" class="btn btn-success">Agregar</a>
 </div>
 <div class"card-body"> 
 <div class="row">

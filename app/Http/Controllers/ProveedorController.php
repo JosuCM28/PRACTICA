@@ -34,7 +34,7 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        //
+        return view('proveedores.create');
     }
 
     /**
@@ -42,9 +42,29 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $proveedor = new proveedorModel();
+        $proveedor = $this->createUpdateProveedor($request, $proveedor);
+        return redirect()
+        ->route('proveedores.index')
+        ->with('message','Se ah creao el registro Correctamente.');
+
     }
 
+
+    public function createUpdateProveedor(Request $request, $proveedor){
+        $proveedor->razonSocial=$request->razonSocial;
+        $proveedor->nombreCompleto=$request->nombreCompleto;
+        $proveedor->direccion=$request->direccion;
+        $proveedor->telefono=$request->telefono;
+        $proveedor->correo=$request->correo;
+        $proveedor->rfc=$request->rfc;
+        $proveedor->save();
+        return $proveedor;
+
+
+
+
+    }
     /**
      * Display the specified resource.
      */
