@@ -18,5 +18,8 @@ class ProveedorModel extends Model
         'correo',
         'rfc'
     ];
-
+    public function productos()
+    {
+        return $this->hasMany(ProductoModel::class, 'idProveedor', 'idProveedor');
+    }
 }

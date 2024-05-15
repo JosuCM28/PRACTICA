@@ -20,5 +20,9 @@ class ProductoModel extends Model
         'idProveedores'
             
     ];
+    public function proveedor()
+    {
+        return $this->belongsTo(ProveedorModel::class, 'idProveedor', 'idProveedor');
+    }
 
 }

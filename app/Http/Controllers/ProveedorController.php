@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\ProveedorModel;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class ProveedorController extends Controller
@@ -12,19 +13,19 @@ class ProveedorController extends Controller
     public function index(Request $request)
     {
         //$proveedores=ProveedorModel::get();
-        $proveedor = ProveedorModel::select('*')->orderBy('idProveedor','desc');
-        $limit=(isset($request->limit)) ? $request->limit :5;
+        $proveedores = ProveedorModel::select('*')->orderBy('idProveedor','desc');
+        $limit=(isset($request->limit)) ? $request->limit :10;
         if(isset($request->search)){
-            $proveedor = $proveedor
+            $proveedores = $proveedores
             ->where('idProveedor','like','%'.$request->search.'%')
-            ->where('razonSocial','like','%'.$request->search.'%')
-            ->where('nombreCompleto','like','%'.$request->search.'%')
-            ->where('direccion','like','%'.$request->search.'%')
-            ->where('telefono','like','%'.$request->search.'%')
-            ->where('correo','like','%'.$request->search.'%')
-            ->where('rfc','like','%'.$request->search.'%');
+            ->orWhere('razonSocial','like','%'.$request->search.'%')
+            ->orWhere('nombreCompleto','like','%'.$request->search.'%')
+            ->orWhere('direccion','like','%'.$request->search.'%')
+            ->orWhere('telefono','like','%'.$request->search.'%')
+            ->orWhere('correo','like','%'.$request->search.'%')
+            ->orWhere('rfc','like','%'.$request->search.'%');
         }
-        $proveedores = $proveedor->paginate($limit)->appends($request->all());
+        $proveedores = $proveedores->paginate($limit)->appends($request->all());
 
         return view('proveedores.index',compact('proveedores'));
     }
@@ -65,12 +66,12 @@ class ProveedorController extends Controller
 
 
     }
-    /**
-     * Display the specified resource.
+    /**.ce.
      */
     public function show(string $id)
     {
-        //
+        $proveedor=ProveedorModel::where('idProveedor', $id)->firstOrFail();
+        return view('proveedores.show', compact('proveedor'));
     }
 
     /**
@@ -78,7 +79,8 @@ class ProveedorController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $proveedor=ProveedorModel::where('idProveedor', $id)->firstOrFail();
+        return view('proveedores.edit', compact('proveedor'));
     }
 
     /**
@@ -86,7 +88,11 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $proveedor=ProveedorModel::where('idProveedor', $id)->firstOrFail();
+        $proveedor=$this->createUpdateProveedor( $request, $proveedor);
+        return redirect()
+        ->route('proveedores.index')
+        ->with('message','Se ah actualizado el registro correctamente.');
     }
 
     /**
@@ -94,6 +100,17 @@ class ProveedorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $proveedor=ProveedorModel::findOrFail($id);
+try{
+$proveedor->delete();
+return redirect()
+->route('proveedores.index')
+->with('message', 'registro eliminado correctamente.');
+}catch(QueryException $e){
+return redirect()
+->route('proveedores.index')
+->with('danger', 'registro relacionado imposible de eliminar');
+
+}
     }
 }

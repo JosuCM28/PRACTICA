@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\ProductoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,7 +47,7 @@ Route::prefix('ruta')->group(function(){
     Route::get('/users/crear', [PruebaController::class, 'create'])->name('users.create');
         Route::get('/users/show', [PruebaController::class, 'show'])->name('users.show');
         Route::get('/users/edit', [PruebaController::class, 'edit'])->name('users.edit');
-        Route::get('/users/delete', [PruebaController::class, 'destroyaa'])->name('users.delete');
+        Route::get('/users/delete', [PruebaController::class, 'destroya'])->name('users.delete');
 
     });
 });
@@ -57,4 +58,10 @@ Route::view('/', 'welcome')->name('welcome');
 
 Route::group(['middleware'=>['auth']], function(){
     Route::resource('proveedores', ProveedorController::class);
+}
+);
+
+Route::group(['middleware'=>['auth']], function(){
+    Route::resource('productos', ProductoController::class);
+
 });

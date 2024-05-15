@@ -17,13 +17,16 @@
                         </select>      
                     </div>
                 </div>
-                <div class="col-8">
+                <div class="col-6">
                     <div class="form-group">
                         <a class="navbar-brand">Buscar</a>
                         <input class="form-control mr-sm-2" type="search" id="search" placeholder="Search" aria-label="Search"
                         value="{{ (isset($_GET['search']))?$_GET['search']:'' }}">  
                     </div>
-                </div>            
+                </div>    
+                @if($proveedores->total() > 10)
+                {{$proveedores->links()}}
+                @endif        
             </div>
 <div class="table-responsive">
 <table class="table">
@@ -34,8 +37,7 @@
       <th scope="col">Nombre</th>
       <th scope="col">Direccion</th>
       <th scope="col">NO.Telefono</th>
-      <th scope="col">Correo</th>
-      <th scope="col">RFC</th>
+      <th scope="col">Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -46,8 +48,20 @@
       <td>{{$proveedor->nombreCompleto}}</td>
       <td>{{$proveedor->direccion}}</td>
       <td>{{$proveedor->telefono}}</td>
-      <td>{{$proveedor->correo}}</td>
-      <td>{{$proveedor->rfc}}</td>
+      <td> <a href="{{route('proveedores.edit', $proveedor->idProveedor)}}" class="btn btn-primary">Edit</a>
+      <a href="{{route('proveedores.show', $proveedor->idProveedor)}}" class="btn btn-info">Ver</a>
+      <button type="submit" class="btn btn-danger"
+                                    form="delete_{{$proveedor->idProveedor}}"
+                                    onclick="return confirm('¿Estás seguro de eliminar el registro?')">
+                                    Eliminar
+                                </button>
+                                <form action="{{route('proveedores.destroy', $proveedor->idProveedor)}}"
+                                    id="delete_{{$proveedor->idProveedor}}" method="post" enctype="multipart/form-data"
+                                    hidden>
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+</td>
     </tr>
     @endforeach
   </tbody>
@@ -55,8 +69,26 @@
 
 
 </div>
-<div class"card-footer">   </div>
-
 </div>
+<div class"card-footer">   </div>
+  @if($proveedores->total()> 10)
+  {{proveedores->links()}}
+  @endif
+  </div>
+</div>
+@section('scripts')
+    <!-- JS PARA FILTAR Y BUSCAR MEDIANTE PAGINADO -->
+    <Script type="text/javascript">
+$('#limit').on('change', function(){
+    window.location.href="{{ route('proveedores.index')}}?limit=" + $(this).val()+ '&search=' + $('#search').val()
+})
+
+$('#search').on('keyup', function(e){
+    if(e.keyCode == 13){
+        window.location.href="{{ route('proveedores.index')}}?limit=" +$('#limit').val()+'&search='+$(this).val()
+    }
+})
+</Script>
+@endsection
 
 @endsection
