@@ -49,6 +49,18 @@
                                 </li>
                             @endif
                         @else
+
+                            <li class="{{'proveedores'==Request::is('proveedores*')?'active':''}}">
+                                <a href="{{route('proveedores.index')}}" class="nav-link">
+                                    <b>Proveedores</b>
+                                </a>
+                            </li>
+
+                            <li class="{{'productos'==Request::is('productos*')?'active':''}}">
+                                <a href="{{route('productos.index')}}" class="nav-link">
+                                    <b>Productos</b>
+                                </a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}

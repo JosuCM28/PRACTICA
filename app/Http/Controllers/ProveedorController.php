@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\ProveedorModel;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProveedorController extends Controller
 {
@@ -101,16 +103,25 @@ class ProveedorController extends Controller
     public function destroy(string $id)
     {
         $proveedor=ProveedorModel::findOrFail($id);
-try{
-$proveedor->delete();
-return redirect()
-->route('proveedores.index')
-->with('message', 'registro eliminado correctamente.');
-}catch(QueryException $e){
-return redirect()
-->route('proveedores.index')
-->with('danger', 'registro relacionado imposible de eliminar');
 
-}
+        try{
+            $proveedor->delete();
+            return redirect()
+            ->route('proveedores.index')
+            ->with('message', 'registro eliminado correctamente.');
+            }catch(QueryException $e){
+            return redirect()
+            ->route('proveedores.index')
+            ->with('danger', 'registro relacionado imposible de eliminar');
+        }
+    }
+
+    public function exportPDF() 
+    {
+        $proveedores = ProveedorModel::get();
+        $pdf = Pdf::loadView('proveedores.exportPDF', compact('proveedores'));
+
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->stream();
     }
 }

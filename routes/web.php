@@ -58,10 +58,10 @@ Route::view('/', 'welcome')->name('welcome');
 
 Route::group(['middleware'=>['auth']], function(){
     Route::resource('proveedores', ProveedorController::class);
-}
-);
+    Route::get('proveedores-pdf', [ProveedorController::class, 'exportPDF'])->name('proveedores.pdf');
+});
 
 Route::group(['middleware'=>['auth']], function(){
     Route::resource('productos', ProductoController::class);
-
+    Route::get('productos-pdf', [ProductoController::class, 'exportPDF'])->name('productos.pdf');
 });
